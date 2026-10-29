@@ -3,7 +3,7 @@ OBJ = $(SRC:.c=.o)
 NAME = my_bsq
 COMPILER = gcc
 INCLUDE = -I ./include/
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -g3 -fsanitize=address
 
 all : $(OBJ)
 	$(COMPILER) $(OBJ) -o $(NAME) $(FLAGS)
