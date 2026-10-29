@@ -53,6 +53,41 @@ void past_intro_seed(int fd)
     }
 }
 
+/*
+1 seed is valid
+-1 seed is not valid
+*/
+int seed_valid(char* seed, t_file_bsq* stat_file)
+{
+    int index = 0;
+    int back = 0;
+
+    while (index < my_strlen(seed))
+    {
+        if (seed[index] != '.' && seed[index] != 'o' && seed[index]  != 10)
+        {
+            write(2, "[ERROR]: Seed not valid [charactere]\n", my_strlen("[ERROR]: Seed not valid [charactere]\n"));
+            return -1;
+        }
+        
+        back += 1;
+
+        if (seed[index] == 10)
+        {
+            if (stat_file->lentgh != back)
+            {
+                write(2, "[ERROR]: Seed not valid [lenth]\n", my_strlen("[ERROR]: Seed not valid [lenth]\n"));
+                return -1;
+            }
+            back = 0;
+        }
+        
+        index += 1;
+    }
+    
+    return 1;
+}
+
 int my_bsq(char* file)
 {
     t_file_bsq* stat_file = malloc(sizeof(*stat_file) * 1);
@@ -64,12 +99,17 @@ int my_bsq(char* file)
 
     if (fd == -1)
     {
-        return 0;
+        return -1;
     }
     
     char* seed = my_malloc(sizeof(*seed) * (stat_file->size + 1));
     past_intro_seed(fd);
     read(fd, seed, stat_file->size);
+
+    if (seed_valid(seed, stat_file) == -1)
+    {
+        return -1;
+    }
 
     close(fd);
     free(seed);
